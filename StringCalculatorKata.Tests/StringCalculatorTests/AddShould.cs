@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace StringCalculatorKata.Tests.StringCalculatorTests
@@ -10,7 +7,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
     public class AddShould
     {
         [Test]
-        public void ReturnZero_WhenAddReceivesEmptyString()
+        public void ReturnZero_WhenCalledWithEmptyString()
         {
             var expectedResult = 0;
 
@@ -23,7 +20,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("2", 2)]
         [TestCase("3", 3)]
         [TestCase("1000000000", 1000000000)]
-        public void ReturnExpectedResult_WhenAddReceivesStringWithOneNumber(string oneNumber, int expectedResult)
+        public void ReturnExpectedResult_WhenCalledWithStringWithOneNumber(string oneNumber, int expectedResult)
         {
             var actual = StringCalculator.Add(oneNumber);
 
@@ -33,7 +30,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("1,2", 3)]
         [TestCase("5, 10", 15)]
         [TestCase("2,3", 5)]
-        public void ReturnExpectedResult_WhenAddReceivesStringWithTwoNumbers(string twoNumbers, int expectedResult)
+        public void ReturnExpectedResult_WhenCalledWithStringWithTwoNumbers(string twoNumbers, int expectedResult)
         {
             var actual = StringCalculator.Add(twoNumbers);
 
@@ -43,7 +40,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("1,2,3", 6)]
         [TestCase("1,2,3,4", 10)]
         [TestCase("1,2,3,4,5", 15)]
-        public void ReturnExpectedResult_WhenAddReceivesUnknownAmountOfNumbers(string unknownAmountOfNumbers,
+        public void ReturnExpectedResult_WhenCalledWithUnknownAmountOfNumbers(string unknownAmountOfNumbers,
             int expectedResult)
         {
             var actual = StringCalculator.Add(unknownAmountOfNumbers);
@@ -54,7 +51,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("1\n2,3", 6)]
         [TestCase("1,2\n3", 6)]
         [TestCase("1\n2,3\n4,5", 15)]
-        public void ReturnExpectedResult_WhenAddReceivesNumbersWithDifferentSeparators(
+        public void ReturnExpectedResult_WhenCalledWithNumbersWithDifferentSeparators(
             string numbersWithDifferentSeparators, int expectedResult)
         {
             var actual = StringCalculator.Add(numbersWithDifferentSeparators);
@@ -65,7 +62,7 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("//;\n4;2", 6)]
         [TestCase("//.\n1.2.3", 6)]
         [TestCase("//#\n1#2#3#4", 10)]
-        public void ReturnExpectedResult_WhenAddReceivesNumbersWithCustomSeparators(string numbersWithCustomSeparators,
+        public void ReturnExpectedResult_WhenCalledWithNumbersWithCustomSeparators(string numbersWithCustomSeparators,
             int expectedResult)
         {
             var actual = StringCalculator.Add(numbersWithCustomSeparators);
