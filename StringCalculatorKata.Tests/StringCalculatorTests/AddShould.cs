@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace StringCalculatorKata.Tests.StringCalculatorTests
@@ -68,6 +69,19 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
             var actual = StringCalculator.Add(numbersWithCustomSeparators);
 
             actual.Should().Be(expectedResult);
+        }
+
+        [TestCase("-1", "Negatives not allowed. -1")]
+        [TestCase("-1,1", "Negatives not allowed. -1")]
+        [TestCase("-2,-1", "Negatives not allowed. -2,-1")]
+        [TestCase("//;\n-1", "Negatives not allowed. -1")]
+        [TestCase("//;\n-2;-1", "Negatives not allowed. -2,-1")]
+        [TestCase("//;\n-2;-1;1", "Negatives not allowed. -2,-1")]
+        public void ThrowExceptionWithExpectedMessage_WhenCalledWithNegativeNumbers(string negativeNumbers, string expectedMessage)
+        {
+            Action action = () => StringCalculator.Add(negativeNumbers);
+
+            action.ShouldThrow<ArgumentException>().WithMessage(expectedMessage);
         }
     }
 }
