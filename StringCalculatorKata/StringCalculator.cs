@@ -25,7 +25,7 @@ namespace StringCalculatorKata
         {
             int[] arrayOfIntegers;
             var customDelimiterFlag = "//";
-            var pattern = @"\/\/(.)\n((-*\d+)\1*)+";
+            var pattern = @"\/\/\[(.+)\]\n((-*\d+)\1*)+";
             var defaultDelimiters = new[] {',', '\n'};
 
             if (numbers.StartsWith(customDelimiterFlag))
