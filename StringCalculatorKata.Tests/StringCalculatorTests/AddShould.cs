@@ -20,7 +20,6 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
         [TestCase("1", 1)]
         [TestCase("2", 2)]
         [TestCase("3", 3)]
-        [TestCase("1000000000", 1000000000)]
         public void ReturnExpectedResult_WhenCalledWithStringWithOneNumber(string oneNumber, int expectedResult)
         {
             var actual = StringCalculator.Add(oneNumber);
@@ -82,6 +81,17 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
             Action action = () => StringCalculator.Add(negativeNumbers);
 
             action.ShouldThrow<ArgumentException>().WithMessage(expectedMessage);
+        }
+
+        [TestCase("1001", 0)]
+        [TestCase("1, 1001", 1)]
+        [TestCase("1, 1001, 2", 3)]
+        [TestCase("1, 1001, 1002", 1)]
+        public void ReturnExpectedResult_WhenCalledWithNumbersBiggerThanOneThousand(string numbersBiggerThanOneThousand, int expectedResult)
+        {
+            var actual = StringCalculator.Add(numbersBiggerThanOneThousand);
+
+            actual.Should().Be(expectedResult);
         }
     }
 }

@@ -9,22 +9,31 @@ namespace StringCalculatorKata
         public static int Add(string numbers)
         {
             var zero = 0;
-            var customDelimiterFlag = "//";
-            var pattern = @"\/\/(.)\n((-*\d+)\1*)*";
-            var arrayOfIntegers = new int[]{};
-            var defaultDelimiters = new[] { ',', '\n' };
+            var upperLimit = 1000;
 
             if (string.IsNullOrEmpty(numbers))
                 return zero;
+
+            var arrayOfIntegers = SplitCsv(numbers);
+
+            ValidateNumbersOrThrow(arrayOfIntegers);
+
+            return arrayOfIntegers.Where(number => number <= upperLimit).Sum();
+        }
+
+        private static int[] SplitCsv(string numbers)
+        {
+            int[] arrayOfIntegers;
+            var customDelimiterFlag = "//";
+            var pattern = @"\/\/(.)\n((-*\d+)\1*)+";
+            var defaultDelimiters = new[] {',', '\n'};
 
             if (numbers.StartsWith(customDelimiterFlag))
                 arrayOfIntegers = SplitCsvWithCustomDelimiters(numbers, pattern);
             else
                 arrayOfIntegers = SplitCsvWithDefaultDelimiters(numbers, defaultDelimiters);
 
-            ValidateNumbersOrThrow(arrayOfIntegers);
-
-            return arrayOfIntegers.Sum();
+            return arrayOfIntegers;
         }
 
         private static int[] SplitCsvWithCustomDelimiters(string numbers, string pattern)
