@@ -7,6 +7,16 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
     [TestFixture]
     public class AddShould
     {
+        [Test]
+        public void ReturnZero_WhenCalledWithEmptyString()
+        {
+            var expectedResult = 0;
+
+            var actual = StringCalculator.Add(string.Empty);
+
+            actual.Should().Be(expectedResult);
+        }
+
         [TestCase("1", 1)]
         [TestCase("2", 2)]
         [TestCase("3", 3)]
@@ -107,16 +117,6 @@ namespace StringCalculatorKata.Tests.StringCalculatorTests
             int expectedResult)
         {
             var actual = StringCalculator.Add(numbersWithMultipleDelimiters);
-
-            actual.Should().Be(expectedResult);
-        }
-
-        [Test]
-        public void ReturnZero_WhenCalledWithEmptyString()
-        {
-            var expectedResult = 0;
-
-            var actual = StringCalculator.Add(string.Empty);
 
             actual.Should().Be(expectedResult);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -26,26 +27,26 @@ namespace StringCalculatorKata
             return number => number <= upperLimit ? number : 0;
         }
 
-        private static int[] SplitCsv(string numbers)
+        private static IEnumerable<int> SplitCsv(string numbers)
         {
-            var delimiters = new[] { ",", "\n" };
-            var singleDelimPattern = @"\/\/([^\[\]]+)\n";
-            var multipleDelimsPattern = @"\/\/(?:\[([^\[\]]+)\])+\n";
+            var delimiters = new[] {",", "\n"};
+            const string singleDelimPattern = @"\/\/([^\[\]]+)\n";
+            const string multipleDelimsPattern = @"\/\/(?:\[([^\[\]]+)\])+\n";
 
             if (IsMatch(numbers, singleDelimPattern))
             {
-                delimiters = new[] { Regex.Matches(numbers, singleDelimPattern)[0].Groups[1].Value };
-                numbers = Regex.Replace(numbers, singleDelimPattern, "");
+                delimiters = new[] {Regex.Matches(numbers, singleDelimPattern)[0].Groups[1].Value};
+                numbers = Regex.Replace(numbers, singleDelimPattern, string.Empty);
             }
             else if (IsMatch(numbers, multipleDelimsPattern))
             {
                 delimiters = (from capture
                         in Regex.Matches(numbers, multipleDelimsPattern)[0].Groups[1].Captures.Cast<Capture>()
                     select capture.Value).ToArray();
-                numbers = Regex.Replace(numbers, multipleDelimsPattern, "");
+                numbers = Regex.Replace(numbers, multipleDelimsPattern, string.Empty);
             }
 
-            return numbers.Split(delimiters, StringSplitOptions.None).Select(int.Parse).ToArray();
+            return numbers.Split(delimiters, StringSplitOptions.None).Select(int.Parse);
         }
 
         private static bool IsMatch(string numbers, string singleDelimPattern)
@@ -53,9 +54,9 @@ namespace StringCalculatorKata
             return Regex.Match(numbers, singleDelimPattern).Success;
         }
 
-        private static void ValidateNumbersOrThrow(int[] arrayOfIntegers)
+        private static void ValidateNumbersOrThrow(IEnumerable<int> arrayOfIntegers)
         {
-            var negativeNumbers = arrayOfIntegers.Where(number => number < 0).ToArray();
+            var negativeNumbers = arrayOfIntegers.Where(number => number < 0);
 
             if (negativeNumbers.Any())
                 throw new ArgumentException(
