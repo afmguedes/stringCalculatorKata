@@ -8,46 +8,49 @@ namespace StringCalculatorKata
     {
         public static int Add(string numbers)
         {
-            var zero = 0;
+            var stringEmptyResult = 0;
             var upperLimit = 1000;
 
             if (string.IsNullOrEmpty(numbers))
-                return zero;
+                return stringEmptyResult;
 
             var arrayOfIntegers = SplitCsv(numbers);
 
             ValidateNumbersOrThrow(arrayOfIntegers);
 
-            return arrayOfIntegers.Where(number => number <= upperLimit).Sum();
+            return arrayOfIntegers.Sum(IsNumberLessThan(upperLimit));
+        }
+
+        private static Func<int, int> IsNumberLessThan(int upperLimit)
+        {
+            return number => number <= upperLimit ? number : 0;
         }
 
         private static int[] SplitCsv(string numbers)
         {
-            int[] arrayOfIntegers;
-            var customDelimiterFlag = "//";
-            var pattern = @"\/\/\[(.+)\]\n((-*\d+)\1*)+";
-            var defaultDelimiters = new[] {',', '\n'};
+            var delimiters = new[] { ",", "\n" };
+            var singleDelimPattern = @"\/\/([^\[\]]+)\n";
+            var multipleDelimsPattern = @"\/\/(?:\[([^\[\]]+)\])+\n";
 
-            if (numbers.StartsWith(customDelimiterFlag))
-                arrayOfIntegers = SplitCsvWithCustomDelimiters(numbers, pattern);
-            else
-                arrayOfIntegers = SplitCsvWithDefaultDelimiters(numbers, defaultDelimiters);
+            if (IsMatch(numbers, singleDelimPattern))
+            {
+                delimiters = new[] { Regex.Matches(numbers, singleDelimPattern)[0].Groups[1].Value };
+                numbers = Regex.Replace(numbers, singleDelimPattern, "");
+            }
+            else if (IsMatch(numbers, multipleDelimsPattern))
+            {
+                delimiters = (from capture
+                        in Regex.Matches(numbers, multipleDelimsPattern)[0].Groups[1].Captures.Cast<Capture>()
+                    select capture.Value).ToArray();
+                numbers = Regex.Replace(numbers, multipleDelimsPattern, "");
+            }
 
-            return arrayOfIntegers;
+            return numbers.Split(delimiters, StringSplitOptions.None).Select(int.Parse).ToArray();
         }
 
-        private static int[] SplitCsvWithCustomDelimiters(string numbers, string pattern)
+        private static bool IsMatch(string numbers, string singleDelimPattern)
         {
-            var numbersSplit = from capture
-                    in Regex.Matches(numbers, pattern)[0].Groups[3].Captures.Cast<Capture>()
-                select capture.Value;
-
-            return numbersSplit.Select(int.Parse).ToArray();
-        }
-
-        private static int[] SplitCsvWithDefaultDelimiters(string numbers, char[] defaultDelimiters)
-        {
-            return numbers.Split(defaultDelimiters).Select(int.Parse).ToArray();
+            return Regex.Match(numbers, singleDelimPattern).Success;
         }
 
         private static void ValidateNumbersOrThrow(int[] arrayOfIntegers)
