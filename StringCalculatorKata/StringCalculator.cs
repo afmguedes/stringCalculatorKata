@@ -7,10 +7,13 @@ namespace StringCalculatorKata
 {
     public class StringCalculator
     {
+        private const string SingleDelimPattern = @"//([^\[\]]+)\n";
+        private const string MultipleDelimsPattern = @"//(?:\[([^\[\]]+)\])+\n";
+
         public static int Add(string numbers)
         {
-            var stringEmptyResult = 0;
-            var upperLimit = 1000;
+            const int stringEmptyResult = 0;
+            const int upperLimit = 1000;
 
             if (string.IsNullOrEmpty(numbers))
                 return stringEmptyResult;
@@ -30,20 +33,18 @@ namespace StringCalculatorKata
         private static IEnumerable<int> SplitCsv(string numbers)
         {
             var delimiters = new[] {",", "\n"};
-            const string singleDelimPattern = @"\/\/([^\[\]]+)\n";
-            const string multipleDelimsPattern = @"\/\/(?:\[([^\[\]]+)\])+\n";
 
-            if (IsMatch(numbers, singleDelimPattern))
+            if (IsMatch(numbers, SingleDelimPattern))
             {
-                delimiters = new[] {Regex.Matches(numbers, singleDelimPattern)[0].Groups[1].Value};
-                numbers = Regex.Replace(numbers, singleDelimPattern, string.Empty);
+                delimiters = new[] {Regex.Matches(numbers, SingleDelimPattern)[0].Groups[1].Value};
+                numbers = Regex.Replace(numbers, SingleDelimPattern, string.Empty);
             }
-            else if (IsMatch(numbers, multipleDelimsPattern))
+            else if (IsMatch(numbers, MultipleDelimsPattern))
             {
                 delimiters = (from capture
-                        in Regex.Matches(numbers, multipleDelimsPattern)[0].Groups[1].Captures.Cast<Capture>()
+                        in Regex.Matches(numbers, MultipleDelimsPattern)[0].Groups[1].Captures.Cast<Capture>()
                     select capture.Value).ToArray();
-                numbers = Regex.Replace(numbers, multipleDelimsPattern, string.Empty);
+                numbers = Regex.Replace(numbers, MultipleDelimsPattern, string.Empty);
             }
 
             return numbers.Split(delimiters, StringSplitOptions.None).Select(int.Parse);
