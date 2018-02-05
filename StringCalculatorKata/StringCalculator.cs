@@ -49,9 +49,9 @@ namespace StringCalculatorKata
             return numbers.Split(delimiters, StringSplitOptions.None).Select(int.Parse);
         }
 
-        private static bool IsMatch(string numbers, string singleDelimPattern)
+        private static bool IsMatch(string numbers, string delimiters)
         {
-            return Regex.Match(numbers, singleDelimPattern).Success;
+            return Regex.Match(numbers, delimiters).Success;
         }
 
         private static void ValidateNumbersOrThrow(IEnumerable<int> arrayOfIntegers)
